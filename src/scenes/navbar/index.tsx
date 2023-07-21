@@ -4,16 +4,19 @@ import Logo from "@/assets/logo.png";
 import Link from "./Link";
 import { SelectedPage } from "@/shared/types";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import ActionButton from "@/shared/ActionButton";
 
 type Props = {
+    isTopOfPage: boolean;
     selectedPage: SelectedPage;
     setSelectedPage: (value: SelectedPage) => void;
 }
 
-const Navbar = ({selectedPage, setSelectedPage}: Props) => {
+const Navbar = ({isTopOfPage, selectedPage, setSelectedPage}: Props) => {
     const flexBetween = "flex items-center justify-between";
     const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false)
     const isAboveMediumScreens = useMediaQuery("(min-width:1060px)")
+    //const navbarBackground = isTopOfPage ? "" : "bg-black-50 drop-shadow";
 
     return <nav>
         <div className={`${flexBetween} fixed top-0 z-30 w-full py-6 bg-offwhite`}>
@@ -30,7 +33,7 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
                                 <Link page="About" selectedPage={selectedPage} setSelectedPage={setSelectedPage}/>
                             </div>
                             <div className={`${flexBetween} gap-8`}>
-                                <p>FREE QUOTE</p>
+                                <ActionButton setSelectedPage={setSelectedPage}>FREE QUOTE</ActionButton>
                             </div>
                         </div>)
                         : (
@@ -41,8 +44,26 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
                         )} 
                 </div>
             </div>
-        
         </div>    
+
+        {/*MOBILE MENU MODEL*/}
+        {!isAboveMediumScreens && isMenuToggled && (
+            <div className="fixed right-0 bottom-0 z-40 h-full w-[300px] bg-black-50 drop-shadow-xl">
+            {/*CLOSE ICON*/}
+                <div className="flex justify-end p-12">
+                    <button onClick={() => setIsMenuToggled(!isMenuToggled)}>
+                        <XMarkIcon className="h-6 w-6 text-white"/>
+                    </button>
+                </div>
+
+            {/*MENU ITEMS*/}    
+            <div className="ml-[33%] flex flex-col gap-10 text-2xl">
+                <Link page="Home" selectedPage={selectedPage} setSelectedPage={setSelectedPage}/>
+                <Link page="About" selectedPage={selectedPage} setSelectedPage={setSelectedPage}/>
+                <Link page="Free Quote" selectedPage={selectedPage} setSelectedPage={setSelectedPage}/>
+            </div>
+            </div>
+        )}
     </nav>;
 }
 
